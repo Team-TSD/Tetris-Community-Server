@@ -10,7 +10,7 @@ use std::{
     fs,
     io::Write,
     process::{Command, Stdio},
-    time::{SystemTime, UNIX_EPOCH}, fmt::format,
+    time::{SystemTime, UNIX_EPOCH},
 };
 use linkify::LinkFinder;
 mod render;
