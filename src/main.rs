@@ -152,6 +152,36 @@ async fn submit_commit(info: web::Json<CommitPost>) -> HttpResponse {
         .body("submitted!")
 }
 
+
+#[derive(Deserialize)]
+struct PushEvent{
+    #[serde(rename = "ref")] //ref is protected
+    reference: String,
+}
+
+async fn webhook(info: web::Json<PushEvent>)->HttpResponse{
+    if info.reference.ends_with("main"){
+        log::warn!("Tetris-Community modified! Attempting to render new changes...");
+        if let Err(e) = re_render() {
+            log::error!("Markdown rendering error on file change: {:?}", e);
+            HttpResponse::InternalServerError().content_type(ContentType::plaintext()).body("re-render failed")
+        } else {
+            log::info!("Tetris-Community re-render success!");
+            HttpResponse::Ok().content_type(ContentType::plaintext()).body("re-render success")
+        }
+    }else{
+        HttpResponse::BadRequest().content_type(ContentType::plaintext()).body("non-main branch")
+    }
+}
+
+fn re_render() -> Result<(), Box<dyn std::error::Error>>{
+    let mut child = Command::new("bash");
+    child.arg("src/pull.sh");
+    child.output()?;
+    write_markdown()?;
+    Ok(())
+}
+
 #[get("/")]
 async fn index_html() -> HttpResponse {
     let s = fs::read_to_string("./public/index.html").unwrap();
@@ -246,37 +276,13 @@ fn read_commits(original: String) -> std::result::Result<String, Box<dyn std::er
 async fn main() -> std::io::Result<()> {
     write_markdown().expect("Initial render of the markdown display page has failed: ");
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
-    // this very bad add a note in an external app dont leave in comments like this
-    /*let mut tsd_watcher = notify::recommended_watcher(|res: Result<Event, _>| match res {
-        Ok(event) => {
-            if let notify::event::EventKind::Modify(mod_kind) = event.kind {
-                if let notify::event::ModifyKind::Data(_) = mod_kind {
-                    log::warn!("Tetris-Community modified! Attempting to render new changes...");
-                    if let Err(e) = write_markdown() {
-                        log::error!("Markdown rendering error on file change: {:?}", e);
-                    } else {
-                        log::info!("Tetris-Community re-render success!");
-                    }
-                }
-            };
-        }
-        Err(e) => log::error!("File watching error: {:?}", e),
-    })
-    .unwrap();
-
-    tsd_watcher
-        .watch(
-            Path::new("./Tetris-Community"),
-            notify::RecursiveMode::NonRecursive,
-        )
-        .unwrap();*/
-
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::new("%a %{User-Agent}i"))
             .route("/commit", web::post().to(render_commit))
             .route("/submit", web::post().to(submit_commit))
             .route("/manage", web::post().to(commit_action))
+            .route("/webhook", web::post().to(webhook))
             .service(raw)
             .service(raw_render)
             .service(index_html)
