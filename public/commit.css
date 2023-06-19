@@ -1,0 +1,50 @@
+body {
+    padding: 20px;
+    margin: 0;
+    height: 100%;
+    background: #2E3336;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+textarea{
+    width: 100%;
+    height: 500px; 
+    background-color: #212121;
+    box-sizing: border-box;
+    resize: none;
+    color: white;
+}
+
+.message{
+    width: 500px;
+}
+
+.markdown{
+    background-color: #212121;
+    padding: 50px
+}
+
+input{
+    background: transparent;
+    border-radius: 2px;
+    border: 2px solid white;
+    color: white;
+    outline: 0;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.form{
+    padding: 10px;
+}
+
+button{
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}

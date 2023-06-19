@@ -1,0 +1,19 @@
+[package]
+name = "tetris_community_server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-files = "0.6.2"
+actix-web = "4.3.1"
+actix-web-httpauth = "0.8.0"
+diffy = "0.3.0"
+env_logger = "0.10.0"
+linkify = "0.9.0"
+log = "0.4.18"
+markdown = "1.0.0-alpha.9"
+scraper = "0.16.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.96"

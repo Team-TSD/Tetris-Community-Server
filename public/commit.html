@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="description" content="Global hub for all things Modern Tetris">
+    <title>Contribute to Tetris Community</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet"> 
+    <link href="markdown.css" rel="stylesheet">
+    <link href="commit.css" rel="stylesheet">
+  </head>
+  <body>
+  <h1><label for="commit">Make a change</label></h1>
+
+  <div class="form">
+    <label for="username">Username:</label>
+    <input type="username" id="username" placeholder="Enter username">
+    <label for="message">Commit Message:</label>
+    <input type="message" class = "message" id="message" placeholder="Enter what the change is about">
+    <button id="preview">Preview Changes</button>
+    <button id="submit">Submit</button>
+  </div>
+
+  <div class="container">
+      <textarea id="commit" name="New Commit" rows="4" cols="50"></textarea>
+  </div>
+  <script src="commit.js"></script> 
+  </body>
+</html>

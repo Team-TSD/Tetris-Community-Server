@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="description" content="Global hub for all things Modern Tetris">
+    <title>Tetris Community Manager</title>
+    <link href="manager.css" rel="stylesheet">
+</head>
+
+<body>
+    <dialog id="myModal">
+        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+            <button id = "preview">Preview</button>
+            <button id = "cancel">Cancel</button>
+            <button id = "approve" style="background:green">Approve</button>
+            <button id = "reject" style="background:red">Reject</button>
+        </div>
+        <p id="modalText"></p>
+    </dialog>
+    <h1>Changes</h1>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Author</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody id="commits">
+
+            </tbody>
+        </table>
+    </div>
+    <script src="manager.js"></script>
+</body>
+
+</html>

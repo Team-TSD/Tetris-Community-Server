@@ -1,0 +1,81 @@
+body {
+    padding: 20px;
+    margin: 0;
+    height: 100%;
+    background: #2E3336;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.markdown{
+    background-color: #212121;
+    padding: 50px
+}
+
+
+button{
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.commit{
+    width: 500px;
+    border: white solid 2px;
+    border-radius: 2px;
+}
+
+table {
+border-collapse:collapse;
+border:.5px solid #E8F1F2;
+font-family:sans-serif;
+text-align:left;
+margin: 0 auto;
+}
+
+th {
+text-transform:uppercase;
+background-color: #172A3A;
+padding:8px;
+text-align:center;
+
+}
+
+tr:nth-child(even){
+background-color:#212121;
+}
+
+td[data-style="bold"]{
+font-weight:bold;
+border-right:1px solid #C5C7D3;
+}
+
+td {
+padding: 12px;
+text-align:left;
+border-bottom: 1px solid #C5C7D3;
+}
+
+tfoot {
+background-color:#172A3A;
+text-align:center;
+}
+
+tbody > tr:hover {
+background-color:#8DE2E2;
+}
+
+
+dialog {
+    background-color: black;
+    color:white;
+    border: 1px solid white;
+    width: 80%;
+    white-space: pre-wrap;
+}
+
+dialog p{
+    background-color: #212121;
+}
