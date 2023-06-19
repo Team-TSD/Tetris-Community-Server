@@ -22,7 +22,7 @@ if (!pass) {
 let current_document;
 let current_path;
 
-fetch("commits", {
+fetch("api/commits", {
     headers: {
         'Authorization': `Bearer ${pass}`
     }

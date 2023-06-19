@@ -1,4 +1,4 @@
-use std::{fs, error::Error};
+use std::{fs, error::Error, fs::OpenOptions, io::Write};
 use scraper::{Html, Selector};
 use markdown::{to_html_with_options, Options as MarkOptions, ParseOptions, CompileOptions, Constructs};
 use serde::Serialize;
@@ -99,7 +99,23 @@ pub fn render_markdown(contents: &String)->Result<(String, String), Box<dyn Erro
 pub fn write_markdown()->Result<(), Box<dyn Error>>{
     let contents = fs::read_to_string(std::path::Path::new("./Tetris-Community/tetriscommunity.md"))?;
     let (html, blocks) = render_markdown(&contents)?;
-    fs::write("./public/render/tetriscommunity.html", &html)?;
-    fs::write("./public/render/tetriscommunity.json", &blocks)?;
+
+    // this code creates the file if it doesnt already exist! unlike fs::write()
+    let mut html_file = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .create(true)
+        .open("./public/render/tetriscommunity.html")?;
+
+    html_file.write(html.as_bytes())?;
+
+    let mut json_file = 
+    OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .create(true)
+        .open("./public/render/tetriscommunity.json")?;
+
+    json_file.write(blocks.as_bytes())?;
     Ok(())
 }
