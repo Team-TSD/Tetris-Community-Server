@@ -10,7 +10,7 @@ use std::{
     fs,
     io::Write,
     process::{Command, Stdio},
-    time::{SystemTime, UNIX_EPOCH},
+    time::{SystemTime, UNIX_EPOCH}, fmt::format,
 };
 use linkify::LinkFinder;
 mod render;
@@ -246,6 +246,31 @@ fn read_commits(original: String) -> std::result::Result<String, Box<dyn std::er
 async fn main() -> std::io::Result<()> {
     write_markdown().expect("Initial render of the markdown display page has failed: ");
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+    // this very bad add a note in an external app dont leave in comments like this
+    /*let mut tsd_watcher = notify::recommended_watcher(|res: Result<Event, _>| match res {
+        Ok(event) => {
+            if let notify::event::EventKind::Modify(mod_kind) = event.kind {
+                if let notify::event::ModifyKind::Data(_) = mod_kind {
+                    log::warn!("Tetris-Community modified! Attempting to render new changes...");
+                    if let Err(e) = write_markdown() {
+                        log::error!("Markdown rendering error on file change: {:?}", e);
+                    } else {
+                        log::info!("Tetris-Community re-render success!");
+                    }
+                }
+            };
+        }
+        Err(e) => log::error!("File watching error: {:?}", e),
+    })
+    .unwrap();
+
+    tsd_watcher
+        .watch(
+            Path::new("./Tetris-Community"),
+            notify::RecursiveMode::NonRecursive,
+        )
+        .unwrap();*/
+
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::new("%a %{User-Agent}i"))
