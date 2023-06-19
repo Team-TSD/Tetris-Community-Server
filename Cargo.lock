@@ -1538,6 +1538,7 @@ dependencies = [
  "linkify",
  "log",
  "markdown",
+ "mime",
  "scraper",
  "serde",
  "serde_json",

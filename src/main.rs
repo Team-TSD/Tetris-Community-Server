@@ -2,6 +2,7 @@ use actix_web::{
     get, http::header::ContentType, middleware::Logger, web, App, HttpResponse, HttpServer,
     Responder, Result,
 };
+use mime;
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use render::{render_markdown, write_markdown};
 use serde::{Deserialize, Serialize};
@@ -9,7 +10,7 @@ use std::{
     fs,
     io::Write,
     process::{Command, Stdio},
-    time::{SystemTime, UNIX_EPOCH},
+    time::{SystemTime, UNIX_EPOCH}, fmt::format,
 };
 use linkify::LinkFinder;
 mod render;
@@ -157,6 +158,38 @@ async fn index_html() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::html()).body(s)
 }
 
+#[get("/{file_path}")]
+async fn get_html(path: web::Path<String>) -> HttpResponse {
+    let path = path.into_inner();
+    let file_path = format!("./public/{path}.html");
+    match fs::read(file_path) {
+        Ok(something) => HttpResponse::Ok().content_type(mime::TEXT_HTML).body(something),
+        Err(_) => HttpResponse::NotFound().body("Not found"),
+    }
+}
+
+#[get("/js/{file_path}")]
+async fn get_js(path: web::Path<String>) -> HttpResponse {
+    let path = path.into_inner();
+    let file_path = format!("./public/js/{path}");
+    match fs::read(file_path) {
+        Ok(something) => HttpResponse::Ok().content_type(mime::TEXT_JAVASCRIPT).body(something),
+        Err(_) => HttpResponse::NotFound().body("Not found"),
+    }
+}
+
+#[get("/css/{file_path}")]
+async fn get_css(path: web::Path<String>) -> HttpResponse {
+    let path = path.into_inner();
+    let file_path = format!("./public/css/{path}");
+    match fs::read(file_path) {
+        Ok(something) => HttpResponse::Ok().content_type(mime::TEXT_CSS).body(something),
+        Err(_) => HttpResponse::NotFound().body("Not found"),
+    }
+}
+
+
+// HIGHLY HIGHLY RECOMEND REPLACING UNWARP LIKE JUST INCASE SEND LIKE A 404 or smthing
 #[get("/raw")]
 async fn raw() -> impl Responder {
     fs::read_to_string("./Tetris-Community/tetriscommunity.md").unwrap()
@@ -168,67 +201,13 @@ async fn raw_render() -> HttpResponse {
     HttpResponse::Ok().content_type(ContentType::html()).body(s)
 }
 
-#[get("/markdown.css")]
-async fn markdown_css() -> HttpResponse {
-    let s = fs::read_to_string("./public/markdown.css").unwrap();
-    HttpResponse::Ok().content_type("text/css").body(s)
-}
-
-#[get("/commit")]
-async fn commit_html() -> HttpResponse {
-    let s = fs::read_to_string("./public/commit.html").unwrap();
-    HttpResponse::Ok().content_type(ContentType::html()).body(s)
-}
-
-#[get("/commit.css")]
-async fn commit_css() -> HttpResponse {
-    let s = fs::read_to_string("./public/commit.css").unwrap();
-    HttpResponse::Ok().content_type("text/css").body(s)
-}
-
-#[get("/commit.js")]
-async fn commit_js() -> HttpResponse {
-    let s = fs::read_to_string("./public/commit.js").unwrap();
-    HttpResponse::Ok().content_type("text/javascript").body(s)
-}
-
-#[get("/manager")]
-async fn manager_html() -> HttpResponse {
-    let s = fs::read_to_string("./public/manager.html").unwrap();
-    HttpResponse::Ok().content_type(ContentType::html()).body(s)
-}
-
-#[get("/manager.css")]
-async fn manager_css() -> HttpResponse {
-    let s = fs::read_to_string("./public/manager.css").unwrap();
-    HttpResponse::Ok().content_type("text/css").body(s)
-}
-
-#[get("/manager.js")]
-async fn manager_js() -> HttpResponse {
-    let s = fs::read_to_string("./public/manager.js").unwrap();
-    HttpResponse::Ok().content_type("text/javascript").body(s)
-}
-
-#[get("/index.css")]
-async fn index_css() -> HttpResponse {
-    let s = fs::read_to_string("./public/index.css").unwrap();
-    HttpResponse::Ok().content_type("text/css").body(s)
-}
-
-#[get("/index.js")]
-async fn index_js() -> HttpResponse {
-    let s = fs::read_to_string("./public/index.js").unwrap();
-    HttpResponse::Ok().content_type("text/javascript").body(s)
-}
-
 #[get("/data")]
 async fn data() -> HttpResponse {
     let s = fs::read_to_string("./public/render/tetriscommunity.json").unwrap();
     HttpResponse::Ok().content_type("application/json").body(s)
 }
 
-#[get("/commits")]
+#[get("/api/commits")]
 async fn get_commits(pass:BearerAuth) -> HttpResponse {
     if !authenticate(pass.token()){
         return HttpResponse::Forbidden().content_type(ContentType::plaintext()).body("not an admin");
@@ -267,6 +246,7 @@ fn read_commits(original: String) -> std::result::Result<String, Box<dyn std::er
 async fn main() -> std::io::Result<()> {
     write_markdown().expect("Initial render of the markdown display page has failed: ");
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+    // this very bad add a note in an external app dont leave in comments like this
     /*let mut tsd_watcher = notify::recommended_watcher(|res: Result<Event, _>| match res {
         Ok(event) => {
             if let notify::event::EventKind::Modify(mod_kind) = event.kind {
@@ -299,18 +279,12 @@ async fn main() -> std::io::Result<()> {
             .route("/manage", web::post().to(commit_action))
             .service(raw)
             .service(raw_render)
-            .service(index_css)
-            .service(commit_css)
-            .service(manager_css)
-            .service(markdown_css)
             .service(index_html)
-            .service(commit_html)
-            .service(manager_html)
-            .service(index_js)
-            .service(commit_js)
-            .service(manager_js)
-            .service(data)
             .service(get_commits)
+            .service(data)
+            .service(get_css)
+            .service(get_js)
+            .service(get_html)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
