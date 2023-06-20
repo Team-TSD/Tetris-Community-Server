@@ -100,7 +100,14 @@ pub fn write_markdown()->Result<(), Box<dyn Error>>{
     let contents = fs::read_to_string(std::path::Path::new("./Tetris-Community/tetriscommunity.md"))?;
     let (html, blocks) = render_markdown(&contents)?;
 
-    // this code creates the file if it doesnt already exist! unlike fs::write()
+    let mut mark_file = OpenOptions::new()
+    .write(true)
+    .truncate(true)
+    .create(true)
+    .open("./public/render/tetriscommunity.md")?;
+
+    mark_file.write(contents.as_bytes())?;
+
     let mut html_file = OpenOptions::new()
         .write(true)
         .truncate(true)

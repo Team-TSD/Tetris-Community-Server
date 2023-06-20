@@ -126,7 +126,7 @@ async fn submit_commit(info: web::Json<CommitPost>) -> HttpResponse {
             .body("empty document");
     }
     let document = info.document.replace("\n", "\r\n");
-    let og = fs::read_to_string("./Tetris-Community/tetriscommunity.md").unwrap();
+    let og = fs::read_to_string("./public/render/tetriscommunity.md").unwrap();
     if og == document {
         return HttpResponse::ExpectationFailed()
             .content_type(ContentType::plaintext())
@@ -226,7 +226,7 @@ async fn get_css(path: web::Path<String>) -> HttpResponse {
 // HIGHLY HIGHLY RECOMEND REPLACING UNWARP LIKE JUST INCASE SEND LIKE A 404 or smthing
 #[get("/raw")]
 async fn raw() -> impl Responder {
-    fs::read_to_string("./Tetris-Community/tetriscommunity.md").unwrap()
+    fs::read_to_string("./public/render/tetriscommunity.md").unwrap()
 }
 
 #[get("/render")]
@@ -278,6 +278,7 @@ fn read_commits(original: String) -> std::result::Result<String, Box<dyn std::er
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    Command::new("bash").arg("src/pull.sh").output().unwrap();
     write_markdown().expect("Initial render of the markdown display page has failed: ");
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
     HttpServer::new(|| {

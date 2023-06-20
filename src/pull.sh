@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 cd Tetris-Community
-git pull
+git fetch --all
+git branch backup-main
+git reset --hard origin/main
