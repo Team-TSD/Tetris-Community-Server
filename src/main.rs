@@ -60,8 +60,12 @@ fn run_commit(username: &str, message: &str, document: String)-> Result<String, 
     let output = String::from_utf8_lossy(&output.stdout).to_string();
     let finder = LinkFinder::new();
     let links: Vec<_> = finder.links(&output).collect();
-    let link = links.get(1).unwrap();
-    Ok(link.as_str().to_string())
+    if let Some(link) = links.iter().find(|l|{l.as_str().contains("pull/new")}){
+        Ok(link.as_str().to_string())
+    }else{
+        log::error!("GIT COMMIT ERROR\n{output}");
+        Err("unable to find PR".into())
+    }
 }
 
 async fn commit_action(info: web::Json<CommitAction>, auth: BearerAuth) -> HttpResponse {
