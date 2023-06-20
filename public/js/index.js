@@ -14,6 +14,15 @@ navButton.onclick = () =>{
     }
 }
 
+window.addEventListener('click', function(e){   
+    if (!navLeft.contains(e.target) && !navButton.contains(e.target)){
+        if(navLeft.classList.contains("open")){
+            navLeft.classList.remove("open")
+            navButton.classList.remove("open")
+        }
+    }
+  });
+
 const parsePages = function(pages){
     content_box.innerHTML = pages[0].text //introduction page
     let links = []
