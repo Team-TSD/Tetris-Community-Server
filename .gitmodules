@@ -1,0 +1,3 @@
+[submodule "Tetris-Community"]
+	path = Tetris-Community
+	url = git@github.com:Team-TSD/Tetris-Community.git
