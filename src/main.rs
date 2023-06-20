@@ -246,7 +246,7 @@ async fn get_commits(pass:BearerAuth) -> HttpResponse {
     if !authenticate(pass.token()){
         return HttpResponse::Forbidden().content_type(ContentType::plaintext()).body("not an admin");
     }
-    match read_commits(fs::read_to_string("./Tetris-Community/tetriscommunity.md").unwrap()) {
+    match read_commits(fs::read_to_string("./public/render/tetriscommunity.md").unwrap()) {
         Ok(json) => HttpResponse::Ok()
             .content_type("application/json")
             .body(json),
