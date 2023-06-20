@@ -41,9 +41,5 @@ commit_button.onclick = () =>{
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(m)})
-       .then(response => response.text()).then(text => alert(text)).then(()=>{
-        let url = new URL(window.location.href)
-        url = url.origin
-        window.open(url, "_self")
-       })
+       .then(response => response.text()).then(text => alert(text))
 }
