@@ -9,7 +9,7 @@ body {
 
 textarea{
     width: 100%;
-    height: 500px; 
+    height: 300px; 
     background-color: #212121;
     box-sizing: border-box;
     resize: none;
@@ -17,7 +17,7 @@ textarea{
 }
 
 .message{
-    width: 500px;
+    width: 300px;
 }
 
 .markdown{

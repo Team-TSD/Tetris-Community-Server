@@ -44,7 +44,7 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 400px;
+    width: 300px;
     background-color: #2c2c2c;
     font-size: 20px;
     font-weight: bold;
@@ -103,19 +103,18 @@ body {
     border-top: 1px dashed #666
 }
 
-.navleft .nav-footer li,
-.navleft .nav-footer a {
+.navleft .nav-footer li{
     text-decoration: none
 }
 
-.navleft .nav-footer a:hover {
-    text-decoration: underline
+.navleft .nav-footer a{
+    color:gray;
+    font-size: 0.9em;
 }
 
 .navleft .nav-footer li {
     font-size: 1em;
     line-height: 1.7;
-    text-decoration: none
 }
 
 .nav-link,
@@ -128,7 +127,7 @@ body {
     text-decoration: none;
     transition-property: background;
     transition-timing-function: linear;
-    transition-duration: 130ms
+    transition-duration: 130ms;
 }
 
 #nav-button {
@@ -160,11 +159,11 @@ body {
 }
 
 #nav-button.open {
-    left: 400px
+    left: 300px
 }
 
 .page-wrapper {
-    margin-left: 420px;
+    margin-left: 320px;
     position: relative;
     z-index: 10;
     min-height: 100%;
@@ -172,7 +171,7 @@ body {
 
 @media (max-width: 930px) {
     .navleft {
-        left: -450px
+        left: -350px
     }
 
     .navleft.open {

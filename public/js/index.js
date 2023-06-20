@@ -1,7 +1,18 @@
 const content_box = document.getElementById("content")
-const nav_box = document.getElementById("nav")
-
+const navBox = document.getElementById("nav")
+const navLeft = document.getElementById("navLeft")
+const navButton = document.getElementById("nav-button")
 const urlParams = new URLSearchParams(window.location.search);
+
+navButton.onclick = () =>{
+    if(navLeft.classList.contains("open")){
+        navLeft.classList.remove("open")
+        navButton.classList.remove("open")
+    }else{
+        navLeft.className+=" open"
+        navButton.className+=" open"
+    }
+}
 
 const parsePages = function(pages){
     content_box.innerHTML = pages[0].text //introduction page
@@ -45,7 +56,7 @@ const parsePages = function(pages){
             }
             li.appendChild(ul)
         }
-        nav_box.appendChild(li)
+        navBox.appendChild(li)
     }
 }
 
