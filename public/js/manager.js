@@ -104,7 +104,7 @@ preview.onclick = () => {
                 throw new Error('failure to parse response');
             }
             localStorage.setItem("data", response)
-            const url = new URL(window.location.href)
+            let url = new URL(window.location.href)
             url = url.origin
             url += "?modified=true"
             window.open(url, "_blank")
