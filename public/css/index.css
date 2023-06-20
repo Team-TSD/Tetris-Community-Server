@@ -171,7 +171,7 @@ body {
 
 @media (max-width: 930px) {
     .navleft {
-        left: -350px
+        left: -300px
     }
 
     .navleft.open {
