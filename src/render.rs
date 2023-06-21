@@ -124,5 +124,19 @@ pub fn write_markdown()->Result<(), Box<dyn Error>>{
         .open("./public/render/tetriscommunity.json")?;
 
     json_file.write(blocks.as_bytes())?;
+
+    let contents = fs::read_to_string(std::path::Path::new("./Tetris-Community/contributors.txt"))?;
+    let contributors : Vec<String> = contents.lines().map(|l| l.to_string()).collect();
+    let contributors = serde_json::to_string(&contributors)?;
+
+    let mut json_file = 
+    OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .create(true)
+        .open("./public/render/contributors.json")?;
+
+    json_file.write(contributors.as_bytes())?;
+
     Ok(())
 }

@@ -233,8 +233,13 @@ async fn get_css(path: web::Path<String>) -> HttpResponse {
     }
 }
 
+#[get("/contributors")]
+async fn get_contributors() -> HttpResponse {
+    let s = fs::read_to_string("./public/render/contributors.json").unwrap();
+    HttpResponse::Ok().content_type("application/json").body(s)
+}
 
-// HIGHLY HIGHLY RECOMEND REPLACING UNWARP LIKE JUST INCASE SEND LIKE A 404 or smthing
+
 #[get("/raw")]
 async fn raw() -> impl Responder {
     fs::read_to_string("./public/render/tetriscommunity.md").unwrap()
@@ -304,6 +309,7 @@ async fn main() -> std::io::Result<()> {
             .service(index_html)
             .service(get_commits)
             .service(data)
+            .service(get_contributors)
             .service(get_css)
             .service(get_js)
             .service(get_html)

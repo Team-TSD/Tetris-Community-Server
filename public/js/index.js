@@ -3,6 +3,7 @@ const navBox = document.getElementById("nav")
 const navLeft = document.getElementById("navLeft")
 const navButton = document.getElementById("nav-button")
 const urlParams = new URLSearchParams(window.location.search);
+const contributor_box = document.getElementById("contributors")
 
 navButton.onclick = () =>{
     if(navLeft.classList.contains("open")){
@@ -76,4 +77,14 @@ if(urlParams.get("modified")){
     fetch("data").then(response => response.json()).then(pages=>parsePages(pages))
 }
 
-
+fetch("contributors").then(response =>response.json()).then(contributors =>{
+    for(const i in contributors){
+        if(i==contributors.length - 1){
+            contributor_box.textContent += `${contributors[i]}`
+        }else if(i==contributors.length - 2){
+            contributor_box.textContent += `${contributors[i]}, and `
+        }else{
+            contributor_box.textContent += `${contributors[i]}, `
+        }
+    }
+})
