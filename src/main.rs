@@ -48,8 +48,14 @@ fn authenticate(pass:&str)->bool{
 }
 
 fn run_commit(username: &str, message: &str, document: String)-> Result<String, Box<dyn std::error::Error>>{
+    let contributors = fs::read_to_string("./Tetris-Community/contributors.txt")?;
+    let contributors : Vec<String>= contributors.lines().map(|line| line.to_lowercase()).collect();
+    let contributor_string = match contributors.contains(&username.to_lowercase()){
+        true=>"0",
+        false=>"1"
+    };
     let mut child = Command::new("bash")
-    .args(["src/commit.sh", &format!("autocommit from {username}"), message])
+    .args(["src/commit.sh", username, message, contributor_string])
     .stdin(Stdio::piped())
     .stdout(Stdio::piped())
     .stderr(Stdio::inherit())
@@ -179,10 +185,15 @@ async fn webhook(info: web::Json<PushEvent>)->HttpResponse{
 }
 
 fn re_render() -> Result<(), Box<dyn std::error::Error>>{
+    pull()?;
+    write_markdown()?;
+    Ok(())
+}
+
+fn pull() -> Result<(), Box<dyn std::error::Error>>{
     let mut child = Command::new("bash");
     child.arg("src/pull.sh");
     child.output()?;
-    write_markdown()?;
     Ok(())
 }
 
@@ -278,7 +289,7 @@ fn read_commits(original: String) -> std::result::Result<String, Box<dyn std::er
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    Command::new("bash").arg("src/pull.sh").output().unwrap();
+    pull().unwrap();
     write_markdown().expect("Initial render of the markdown display page has failed: ");
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
     HttpServer::new(|| {
